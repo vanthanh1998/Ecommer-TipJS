@@ -10,13 +10,18 @@ app.use(helmet())
 app.use(compression())
 
 // init db
+require('./dbs/init.mongodb')
+
+const {checkOverload} = require('./helpers/check.connect.js')
+
+checkOverload()
 
 // init router
 app.get('/', (req, res, next) => {
     const strCompress = 'Hello TipJS'
     return res.status(200).json({
         message: 'Hello World',
-        metaData : strCompress.repeat(10000)
+        // metaData : strCompress.repeat(10000)
     })
 })
 
