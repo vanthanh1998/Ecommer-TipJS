@@ -1,40 +1,47 @@
-'use strict'
+"use strict";
 
 // !mdbgum
-const { model, Schema, Types} = require('mongoose'); // Erase if already required
+const { model, Schema, Types } = require("mongoose"); // Erase if already required
 
-const DOCUMENT_NAME = 'Shop'
-const COLLECTION_NAME = 'Shops'
+const DOCUMENT_NAME = "Shop";
+const COLLECTION_NAME = "Shops";
 
 // Declare the Schema of the Mongo model
-var shopSchema = new Schema({
-    name:{
-        type:String,
-        trim: true,
-        maxLength: 150
+var shopSchema = new Schema(
+  {
+    name: {
+      type: String,
+      trim: true,
+      maxLength: 150,
     },
-    email:{
-        type:String,
-        unique:true,
-        trim: true,
+    email: {
+      type: String,
+      unique: true,
+      trim: true,
     },
-    status:{
-        type:String,
-        enum: ['active', 'inactive'],
-        default: 'inactive'
+    password: {
+      type: String,
+      require: true,
     },
-    verfify:{
-        type: Schema.Types.Boolean,
-        default: false,
+    status: {
+      type: String,
+      enum: ["active", "inactive"],
+      default: "inactive",
     },
-    roles:{
-        type: Array,
-        default: []
-    }
-}, {
+    verfify: {
+      type: Schema.Types.Boolean,
+      default: false,
+    },
+    roles: {
+      type: Array,
+      default: [],
+    },
+  },
+  {
     timestamps: true,
-    collection: COLLECTION_NAME
-});
+    collection: COLLECTION_NAME,
+  }
+);
 
 //Export the model
 module.exports = model(DOCUMENT_NAME, shopSchema);
