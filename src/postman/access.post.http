@@ -1,7 +1,9 @@
-@url_dev= http://127.0.0.1:3056/v1/api/
+@url_dev= http://127.0.0.1:3053/v1/api/
 ### signup
 POST {{url_dev}}shop/signup
 Content-Type: application/json
+// x-api-key => apikeys table
+x-api-key: 6762b59a9d7f4c87a1d7760ecb1a340d4b33248da8343d22335049d6f5fd21288ebdaad225a38c6f2f77d25516ac2c22ccb6936b9b919a9cb11c74eb8687c6b0
 
 {
     "name": "Shop laptop",
