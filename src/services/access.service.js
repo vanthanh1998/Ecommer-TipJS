@@ -5,7 +5,7 @@ const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 const KeyTokenService = require("./keyToken.service");
 
-const createTokenPair = require("../auth/authUtils");
+const { createTokenPair } = require("../auth/authUtils");
 const { getInfoData } = require("../utils");
 const { BadRequestError, ConflictRequestError, AuthFailureError } = require("../core/error.response");
 const { findByEmail } = require("./shop.service");
@@ -26,7 +26,7 @@ class AccessService {
     4 - generate tokens
     5 - get data return login
   */
-  static login = async( { email, password, refreshToken = null}) => {
+  static login = async({ email, password, refreshToken = null}) => {
     // 1
     const foundShop = await findByEmail({ email })
     if(!foundShop) throw new BadRequestError('Shop not registered')
@@ -53,7 +53,13 @@ class AccessService {
     };
   }
 
-  static signUp = async ( { name, email, password }) => {
+  static logout = async(keyStore) => {
+      const delKey = await KeyTokenService.removeKeyById(keyStore._id)
+      console.log( {delKey});
+      return delKey
+  }
+
+  static signUp = async ({ name, email, password }) => {
       // step1: check email exist?
       const holderShop = await shopModel.findOne({ email }).lean();
       if (holderShop) {
