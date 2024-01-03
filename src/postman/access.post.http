@@ -3,10 +3,10 @@
 POST {{url_dev}}shop/signup
 Content-Type: application/json
 // x-api-key => apikeys table
-x-api-key: 0e4ae9783a4f09fc217be604ac02d0b8d71f310606e8906a6a3bd6ca2df82e50531e029545c729ccb8621480f33475aecd9f5277e5566e2c303c575a3e2a346a
+x-api-key: c5092ce7cf5eecb9f5b13bef4a4442b27d89e36d43fff2415963a87c32d3175a506a9c21552f73cdb786ba600007111a168b620c515d38997a85238af751a8c8
 
 {
     "name": "Shop laptop",
-    "email": "foxrainsad1998@gmail.com",
-    "password": "foxrainsad1998"
+    "email": "foxrainsad19998@gmail.com",
+    "password": "foxrainsad19998"
 }
