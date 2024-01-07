@@ -5,9 +5,9 @@ const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 const KeyTokenService = require("./keyToken.service");
 
-const { createTokenPair } = require("../auth/authUtils");
+const { createTokenPair, verifyJWT } = require("../auth/authUtils");
 const { getInfoData } = require("../utils");
-const { BadRequestError, ConflictRequestError, AuthFailureError } = require("../core/error.response");
+const { BadRequestError, ForbiddenError, AuthFailureError } = require("../core/error.response");
 const { findByEmail } = require("./shop.service");
 
 const roleShop = {
@@ -18,6 +18,52 @@ const roleShop = {
 };
 
 class AccessService {
+
+  /*
+     check this token used?
+  */
+
+  static handleRefreshToken = async(refreshToken) => {
+    // check token này đã đc sd chưa
+    const foundToken = await KeyTokenService.findByRefreshTokenUsed(refreshToken)
+    // nếu có
+    if(foundToken){
+      // decode xem token là thằng nào
+      const { userId, email } = await verifyJWT(refreshToken, foundToken.privateKey)
+      console.log({ userId, email });
+      // delete all token in keystore
+      await KeyTokenService.deleteKeyById(userId)
+      throw new ForbiddenError('Something wrong happend !! pls relogin')
+    }
+    // k có
+    const houderToken = await KeyTokenService.findByRefreshToken(refreshToken)
+    if(!houderToken) throw new AuthFailureError('Shop not registered')
+
+    // verify token
+    const { userId, email } = await verifyJWT(refreshToken, houderToken.privateKey)
+    console.log('[2]--', { userId, email });
+    // check userID
+    const foundShop = await findByEmail({email})
+    if(!foundShop) throw new AuthFailureError('Shop not registered')
+
+    // create token news
+    const tokens =  await createTokenPair({ userId, email }, houderToken.publicKey, houderToken.privateKey)
+    // update token
+    await houderToken.updateOne({
+        $set: {
+          refreshToken: tokens.refreshToken
+        },
+        $addToSet: {
+          refreshTokensUsed: refreshToken
+        }
+    })
+
+    return {
+      user: { userId, email },
+      tokens
+    }
+    
+  }
 
   /*
     1 - check email in db
